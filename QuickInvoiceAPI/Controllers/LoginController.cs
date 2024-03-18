@@ -36,8 +36,8 @@ namespace QuickInvoiceAPI.Controllers
 
             if (user != null)
             {
-                string tokenString = GenerateJSONWebToken();
-                return Ok(tokenString);
+                user.AccessToken = GenerateJSONWebToken();
+                return Ok(user);
             }
 
             return Unauthorized();
