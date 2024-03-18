@@ -9,7 +9,5 @@
         public decimal Price { get; set; }
 
         public bool? ApplyIva { get; set; }
-
-        public bool? Active { get; set; }
     }
 }

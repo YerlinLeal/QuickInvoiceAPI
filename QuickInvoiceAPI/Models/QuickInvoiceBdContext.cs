@@ -37,10 +37,6 @@ public partial class QuickInvoiceBdContext : DbContext
                 .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("CODE");
-            entity.Property(e => e.Active)
-                .IsRequired()
-                .HasDefaultValueSql("((1))")
-                .HasColumnName("ACTIVE");
             entity.Property(e => e.ApplyIva)
                 .IsRequired()
                 .HasDefaultValueSql("((1))")
@@ -49,20 +45,9 @@ public partial class QuickInvoiceBdContext : DbContext
                 .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("DESCRIPTION");
-            entity.Property(e => e.ModificationDate)
-                .HasColumnType("datetime")
-                .HasColumnName("MODIFICATION_DATE");
             entity.Property(e => e.Price)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("PRICE");
-            entity.Property(e => e.RegistrationDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("REGISTRATION_DATE");
-            entity.Property(e => e.UserModifies)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("USER_MODIFIES");
         });
 
         modelBuilder.Entity<Sale>(entity =>
@@ -95,15 +80,18 @@ public partial class QuickInvoiceBdContext : DbContext
                 .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("PRODUCT_CODE");
-            entity.Property(e => e.Amount)
+            entity.Property(e => e.Description)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("DESCRIPTION");
+            entity.Property(e => e.ApplyIva)
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("APPLY_IVA");
+            entity.Property(e => e.Price)
                 .HasColumnType("decimal(10, 2)")
-                .HasColumnName("AMOUNT");
+                .HasColumnName("PRICE");
             entity.Property(e => e.Quantity).HasColumnName("QUANTITY");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.SaleProducts)
-                .HasForeignKey(d => d.ProductCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_SALE_PRODUCT_PRODUCT");
 
             entity.HasOne(d => d.Sale).WithMany(p => p.SaleProducts)
                 .HasForeignKey(d => d.SaleId)
@@ -122,21 +110,10 @@ public partial class QuickInvoiceBdContext : DbContext
                 .IsRequired()
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("ACTIVE");
-            entity.Property(e => e.ModificationDate)
-                .HasColumnType("datetime")
-                .HasColumnName("MODIFICATION_DATE");
             entity.Property(e => e.Password)
                 .HasMaxLength(150)
                 .IsUnicode(false)
                 .HasColumnName("PASSWORD");
-            entity.Property(e => e.RegistrationDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("REGISTRATION_DATE");
-            entity.Property(e => e.UserModifies)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("USER_MODIFIES");
             entity.Property(e => e.UserName)
                 .HasMaxLength(100)
                 .IsUnicode(false)

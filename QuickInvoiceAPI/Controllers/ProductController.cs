@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using QuickInvoiceAPI.Models;
 using Microsoft.AspNetCore.Cors;
 using QuickInvoiceAPI.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QuickInvoiceAPI.Controllers
 {
     [EnableCors("RulesCors")]
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -19,7 +21,6 @@ namespace QuickInvoiceAPI.Controllers
         }
 
         [HttpGet]
-        //[Route("List")]
         public IActionResult List()
         {
             try
@@ -35,7 +36,6 @@ namespace QuickInvoiceAPI.Controllers
         }
 
         [HttpGet("{code}")]
-        //[Route("Get/{codeProduct}")]
         public IActionResult Get(string code)
         {
             try
@@ -53,7 +53,6 @@ namespace QuickInvoiceAPI.Controllers
         }
 
         [HttpPost]
-        //[Route("Add")]
         public IActionResult Add([FromBody] ProductDTO productDTO)
         {
             try
@@ -81,7 +80,6 @@ namespace QuickInvoiceAPI.Controllers
         }
 
         [HttpPut("{code}")]
-        //[Route("Edit")]
         public IActionResult Edit(string code, [FromBody] ProductDTO productDTO)
         {
             if (code != productDTO.Code) return BadRequest();
@@ -95,7 +93,6 @@ namespace QuickInvoiceAPI.Controllers
                 product.Description = productDTO.Description is null ? product.Description : productDTO.Description;
                 product.Price = productDTO.Price <= 0 ? product.Price : productDTO.Price;
                 product.ApplyIva = productDTO.ApplyIva is null ? product.ApplyIva : productDTO.ApplyIva;
-                product.Active = productDTO.Active is null ? product.Active : productDTO.Active;
 
                 _bdContext.SaveChanges();
 
@@ -108,7 +105,6 @@ namespace QuickInvoiceAPI.Controllers
         }
 
         [HttpDelete("{code}")]
-        //[Route("Delete/{codeProduct}")]
         public IActionResult Delete(string code)
         {
             Product? product = _bdContext.Products.Find(code);
@@ -134,8 +130,7 @@ namespace QuickInvoiceAPI.Controllers
                Code = product.Code,
                Description = product.Description,
                Price = product.Price,
-               ApplyIva = product.ApplyIva,
-               Active = product.Active
+               ApplyIva = product.ApplyIva
            };
 
     }

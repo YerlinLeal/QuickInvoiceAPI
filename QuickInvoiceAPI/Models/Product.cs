@@ -14,14 +14,4 @@ public partial class Product
 
     public bool? ApplyIva { get; set; }
 
-    public bool? Active { get; set; }
-
-    public DateTime? RegistrationDate { get; set; }
-
-    public DateTime? ModificationDate { get; set; }
-
-    public string? UserModifies { get; set; }
-
-    [JsonIgnore]
-    public virtual ICollection<SaleProduct> SaleProducts { get; set; } = new List<SaleProduct>();
 }

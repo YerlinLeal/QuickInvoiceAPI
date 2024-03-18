@@ -9,11 +9,13 @@ public partial class SaleProduct
 
     public string ProductCode { get; set; } = null!;
 
+    public string Description { get; set; } = null!;
+
     public int? Quantity { get; set; }
 
-    public decimal? Amount { get; set; }
+    public decimal? Price { get; set; }
 
-    public virtual Product Product { get; set; } = null!;
+    public bool? ApplyIva { get; set; }
 
     public virtual Sale Sale { get; set; } = null!;
 }

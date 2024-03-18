@@ -13,11 +13,5 @@ public partial class User
 
     public bool? Active { get; set; }
 
-    public DateTime RegistrationDate { get; set; }
-
-    public DateTime? ModificationDate { get; set; }
-
-    public string? UserModifies { get; set; }
-
     public virtual ICollection<Sale> Sales { get; set; } = new List<Sale>();
 }

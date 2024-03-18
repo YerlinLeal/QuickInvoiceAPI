@@ -4,11 +4,13 @@ using QuickInvoiceAPI.Models;
 using Microsoft.AspNetCore.Cors;
 using QuickInvoiceAPI.DTOs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QuickInvoiceAPI.Controllers
 {
     [EnableCors("RulesCors")]
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class SaleController : ControllerBase
     {
@@ -41,12 +43,11 @@ namespace QuickInvoiceAPI.Controllers
         {
             try
             {
-                SaleDTO sale = _bdContext.Sales
+                SaleDTO? sale = _bdContext.Sales
                     .Where(sale => sale.Id == id)
                     .Include(sale => sale.User)
                     .Include(sale => sale.SaleProducts)
-                    .ThenInclude(saleProduct => saleProduct.Product)
-                    .Select(sale => SaleToDTO(sale)).First();
+                    .Select(sale => SaleToDTO(sale)).FirstOrDefault();
 
                 if (sale == null) return NotFound();
 
@@ -71,8 +72,10 @@ namespace QuickInvoiceAPI.Controllers
                     SaleProducts = saleDTO.Products.Select(product => new SaleProduct()
                     {
                         ProductCode = product.Code,
-                        Amount = product.Price,
-                        Quantity = product.Quantity
+                        Description = product.Description,
+                        Price = product.Price,
+                        Quantity = product.Quantity,
+                        ApplyIva = product.ApplyIva
                     }).ToList()
                 };
 
@@ -98,14 +101,14 @@ namespace QuickInvoiceAPI.Controllers
                Date = sale.Date,
                UserId = sale.UserId,
                UserName = sale.User != null ? sale.User.UserName : String.Empty,
-               Products = sale.SaleProducts.Select(saleProduct => new SaleProductDTO()
+               Products = sale.SaleProducts != null ? sale.SaleProducts.Select(saleProduct => new SaleProductDTO()
                {
                    Code = saleProduct.ProductCode,
-                   Price = saleProduct.Amount,
+                   Price = saleProduct.Price,
                    Quantity = saleProduct.Quantity,
-                   ApplyIva = saleProduct.Product != null ? saleProduct.Product.ApplyIva: true,
-                   Description = saleProduct.Product != null ? saleProduct.Product.Description : String.Empty
-               }).ToList()
+                   ApplyIva = saleProduct.ApplyIva,
+                   Description = saleProduct.Description
+               }).ToList() : new List<SaleProductDTO>()
            };
     }
 }
